@@ -53,5 +53,5 @@ class PREDICTOR(object):
         data_type= [('name','S10'),('score','float')]
         scores = np.array(scores, dtype=data_type)
         best_guess = np.sort(scores, order='score')[-1][0]
-        
+        print scores
         return best_guess
