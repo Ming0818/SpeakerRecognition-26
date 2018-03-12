@@ -22,6 +22,7 @@ class SPEAKER(object):
         mfcc_feat_stack = np.empty(shape=[0,13])
 
         for filename in self.speaker_dataDirectory:
+            print "Extracting feature from", filename
             (rate, sig) = wav.read(filename)
             mfcc_feat = np.array(mfcc(sig, rate))
 

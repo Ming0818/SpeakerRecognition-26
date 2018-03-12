@@ -26,6 +26,7 @@ else:
 
         data_dirnames = glob.glob('./data/*')
         speaker_names = [dirname[7:] for dirname in data_dirnames]
+        speaker_names.remove('chatter')
         speakers = {}
 
         total_feature = 0
@@ -41,14 +42,15 @@ else:
         print "Training UBM"
 
         # extract feature
-        print "Chatter data: chatter.wav"
-        (rate, sig) = wav.read('chatter.wav')
+        print "Chatter data: meeting8k.wav"
+        (rate, sig) = wav.read('./data/chatter/meeting8k.wav')
         background_features = np.array(mfcc(sig, rate))
         # Feature normalization, mean subtraction
         background_features_mean = np.mean(background_features, axis=0)
         background_features = background_features - background_features_mean
 
         ubm_all = UBM(gaussian_num, background_features)
+        # converting to bob style for MAP
         ubm_bob = bob.learn.em.GMMMachine(gaussian_num, background_features.shape[1])
         ubm_bob.means = ubm_all.get_means()
         ubm_bob.variances = ubm_all.get_covariances()
@@ -97,6 +99,7 @@ else:
         # read saved UBM
         print "Fetching UBM"
         ubm_all = pickle.load(open('./model/SVM/ubm_all.mod', 'rb'))
+        # converting to bob style for MAP
         ubm_bob = bob.learn.em.GMMMachine(ubm_all.num_gauss, 13)
         ubm_bob.means = ubm_all.get_means()
         ubm_bob.variances = ubm_all.get_covariances()
